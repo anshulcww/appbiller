@@ -4,7 +4,6 @@ const router = express.Router();
 const Table = require('../models/tables');
 const Customer = require('../models/customers');
 const Menu = require('../models/menus');
-const Item = require('../models/items')
 //retrieving tables
 router.get('/tables', (req, res, next) => {
     Table.find(function(err, tables){
@@ -22,14 +21,16 @@ router.get('/customers/:_id', (req, res, next) =>{
         res.json(customer);
     })
 })
+router.get('/menus/:_id', (req, res, next) =>{
+    Menu.findById(req.params._id, function(err, menu){
+        if (err) return next(err);
+        res.json(menu);
+    })
+})
+
 router.get('/menus', (req, res, next) =>{
     Menu.find(function(err, menus){
         res.json(menus);
-    })
-})
-router.get('/items', (req, res, next) =>{
-    Item.find(function(err, items){
-        res.json(items);
     })
 })
 
@@ -48,24 +49,7 @@ router.post('/tables', (req, res, next) =>{
         }
     });
 });
-//add items
-router.post('/items', (req, res, next) =>{
-    //logic to add contact
-    let newItem = new Item({
-        itemname: req.body.itemname,
-        quantity: req.body.quantity,
-        rate: req.body.rate
-    });
-    newItem.save((err, item) => {
-        if(err){
-            res.json({msg: " failed to add items"});
-        }else{
-            res.json({msg: 'Item added succesfully'});
-            console.log(newItem);
-        }
-    });
-});
-//add menu
+
 router.post('/menus', (req, res, next) =>{
     //logic to add menu
     let newMenu = new Menu({
